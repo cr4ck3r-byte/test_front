@@ -55,6 +55,7 @@ export default function CrudHotel() {
     habitacion_id: "",
     persona_id: "",
     monto_reserva: "",
+    id: "",
   });
 
   useEffect(() => {
@@ -150,7 +151,7 @@ export default function CrudHotel() {
       } else if (activeTab === "reserva") {
         const reservaData = {
           ...reserva,
-          fechareserva: new Date().toISOString(),
+          fecha_reserva: new Date().toISOString(),
           habitacion_id: Number(reserva.habitacion_id),
           persona_id: Number(reserva.persona_id),
         };
@@ -222,7 +223,6 @@ export default function CrudHotel() {
         Number(habitacion.cant_camas) <= 4
       );
     } else if (activeTab === "reserva") {
-      console.log(reserva);
       const today = new Date();
       today.setHours(0, 0, 0, 0);
       const entrada = new Date(reserva.fecha_entrada);
@@ -267,7 +267,16 @@ export default function CrudHotel() {
           tiene_television,
         };
       });
-    if (activeTab === "reserva") setReserva(item);
+    if (activeTab === "reserva") {
+      const editedReserva = {
+        fecha_entrada: item.fecha_entrada
+          ? item.fecha_entrada.split("T")[0]
+          : "",
+        fecha_salida: item.fecha_salida ? item.fecha_salida.split("T")[0] : "",
+        persona_id: item.persona_id.toString(),
+      };
+      setReserva(editedReserva);
+    }
   };
 
   return (
@@ -514,6 +523,7 @@ export default function CrudHotel() {
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="fecha_entrada">Fecha de Entrada</Label>
+                    {console.log(reserva)}
                     <Input
                       id="fecha_entrada"
                       type="date"
@@ -619,7 +629,7 @@ export default function CrudHotel() {
                 ? reservas.map((r) => (
                     <TableRow key={r.id}>
                       <TableCell>
-                        {new Date(r.fechareserva).toLocaleDateString()}
+                        {new Date(r.fecha_reserva).toLocaleDateString()}
                       </TableCell>
                       <TableCell>
                         {new Date(r.fecha_entrada).toLocaleDateString()}
